@@ -3,3 +3,5 @@ dungeon-intro = NanoTrasen deep space scanners show that a powerful artifact lie
 dungeon-enter-announce = Good luck, team! Find us the Amulet of Yendor!
 
 dungeon-report = The team of {$players} reached a maximum dungeon level of {$depth} and vanquished {$count} monsters.
+
+dungeon-level-not-clear = You cannot descend until this level is more clear.

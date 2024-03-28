@@ -650,3 +650,6 @@
 
 - type: Tag
   id: SubdermalImplant
+
+- type: Tag
+  id: Boss

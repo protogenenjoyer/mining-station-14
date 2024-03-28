@@ -1,13 +1,17 @@
 using System.Linq;
 
+using Content.Server.Bible.Components;
 using Content.Server.Chat.Systems;
 using Content.Server.DoAfter;
 using Content.Server.Ghost.Components;
+using Content.Server.NPC.Components;
 using Content.Server.Popups;
 using Content.Shared.DragDrop;
 using Content.Shared.GameTicking;
 using Content.Shared.Gravity;
 using Content.Shared.Interaction;
+using Content.Shared.Mobs.Systems;
+using Content.Shared.Tag;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
@@ -28,6 +32,9 @@ public class WarperSystem : EntitySystem
     [Dependency] private readonly ChatSystem _chatSystem = default!;
     [Dependency] private readonly DoAfterSystem _doAfter = default!;
     [Dependency] private readonly RLMapGen _procgen = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly IEntityManager _entityManager = default!;
+    [Dependency] private readonly TagSystem _tags = default!;
 
     public int dungeonLevel = 0;
 
@@ -136,8 +143,43 @@ public class WarperSystem : EntitySystem
         return null;
     }
 
+    private bool CanDescend(EntityUid uid, WarperComponent component)
+    {
+        if (component.Dungeon && component.RequiresCompletion)
+            return CheckComplete(uid, component);
+        else
+            return true;
+    }
+
+    private bool CheckComplete(EntityUid uid, WarperComponent component)
+    {
+        int Nmonst = 0;
+        int Nalive = 0;
+        foreach (var ent in _entityManager.EntityQuery<NPCComponent>())
+        {
+            if (Transform(ent.Owner).MapID == Transform(uid).MapID) // on same map
+            {
+                if (HasComp<FamiliarComponent>(ent.Owner)) // skip pets
+                    continue;
+                Nmonst++; // count all monsters
+                if (_mobState.IsDead(ent.Owner))
+                    continue;
+                if (_tags.HasTag(ent.Owner, "Boss")) // bosses skip immediately
+                    return false;
+                Nalive++; // count monsters alive
+            }
+        }
+        return Nalive <= 0.2*Nmonst;
+    }
+
     private void OnActivate(EntityUid uid, WarperComponent component, ActivateInWorldEvent args)
     {
+        if (!CanDescend(uid, component))
+        {
+            _popupSystem.PopupEntity(Loc.GetString("dungeon-level-not-clear"), args.User, Filter.Entities(args.User));
+            return;
+        }
+
         if (component.Dungeon && GenerateDungeon(uid, component))
         {
             // don't generate again
