@@ -383,10 +383,6 @@ public sealed partial class CargoSystem
         var blacklistQuery = GetEntityQuery<CargoSellBlacklistComponent>();
         toSell = new HashSet<EntityUid>();
 
-        var stationUid = _station.GetOwningStation(gridUid);
-        if (!TryComp<StationCargoOrderDatabaseComponent>(stationUid, out var orderDatabase) ||
-            !TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
-
         foreach (var pallet in GetCargoPallets(gridUid))
         {
             // Containers should already get the sell price of their children so can skip those.
@@ -409,15 +405,6 @@ public sealed partial class CargoSystem
                 toSell.Add(ent);
                 amount += price;
             }
-        }
-
-        bank.Balance += (int) amount;
-        _sawmill.Debug($"Cargo sold {toSell.Count} entities for {amount}");
-
-        foreach (var ent in toSell)
-        {
-            SellHooks(ent);
-            Del(ent);
         }
     }
 
@@ -592,6 +579,8 @@ public sealed partial class CargoSystem
 
     private void OnPalletSale(EntityUid uid, CargoPalletConsoleComponent component, CargoPalletSellMessage args)
     {
+        Logger.Debug("OnPalletSale called");
+
         var player = args.Session.AttachedEntity;
 
         var stationUid = _station.GetOwningStation(uid);
@@ -651,6 +640,8 @@ public sealed partial class CargoSystem
 
     private void RecallCargoShuttle(EntityUid uid, CargoShuttleConsoleComponent component, CargoRecallShuttleMessage args)
     {
+        Logger.Debug("RecallCargoShuttle called");
+
         var player = args.Session.AttachedEntity;
 
         if (player == null) return;
@@ -672,30 +663,10 @@ public sealed partial class CargoSystem
             return;
         }
 
-        if (IsBlocked(shuttle))
-        {
-            _popup.PopupEntity(Loc.GetString("cargo-shuttle-console-organics"), player.Value, player.Value);
-            _audio.PlayPvs(_audio.GetSound(component.DenySound), uid);
-            return;
-        }
-
         SellPallets((EntityUid) orderDatabase.Shuttle, out double price);
         bank.Balance += (int) price;
         _console.RefreshShuttleConsoles();
         SendToCargoMap(orderDatabase.Shuttle.Value);
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="component"></param>
-    private bool IsBlocked(CargoShuttleComponent component)
-    {
-        // TODO: Would be good to rate-limit this on the console.
-        var mobQuery = GetEntityQuery<MobStateComponent>();
-        var xformQuery = GetEntityQuery<TransformComponent>();
-
-        return FoundOrganics(component.Owner, mobQuery, xformQuery);
     }
 
     public bool FoundOrganics(EntityUid uid, EntityQuery<MobStateComponent> mobQuery, EntityQuery<TransformComponent> xformQuery)

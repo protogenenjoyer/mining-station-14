@@ -1,4 +1,4 @@
-﻿[game]
+[game]
 # Straight in-game baby
 lobbyenabled = false
 
@@ -8,6 +8,6 @@ grid_splitting = false
 
 [shuttle]
 # Wastes startup time
-cargo = false
+cargo = true
 emergency_enabled = false
 
