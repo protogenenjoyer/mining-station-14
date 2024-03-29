@@ -34,6 +34,7 @@ using Content.Shared.Materials;
 using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Content.Shared.Coordinates;
+using Content.Shared.Mobs;
 
 namespace Content.Server.Cargo.Systems;
 
@@ -393,7 +394,8 @@ public sealed partial class CargoSystem
                 // - anything anchored (e.g. light fixtures)
                 // - anything blacklisted (e.g. players).
                 if (toSell.Contains(ent) ||
-                    (xformQuery.TryGetComponent(ent, out var xform) && xform.Anchored))
+                    xformQuery.TryGetComponent(ent, out var xform) &&
+                    (xform.Anchored || !CanSell(ent, xform)))
                     continue;
 
                 if (blacklistQuery.HasComponent(ent))
@@ -406,6 +408,39 @@ public sealed partial class CargoSystem
                 amount += price;
             }
         }
+    }
+
+    private bool CanSell(EntityUid uid, TransformComponent xform)
+    {
+        if (TryComp<MobStateComponent>(uid, out var mobstate))
+        {
+            if (mobstate.CurrentState == MobState.Alive)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        // Recursively check for mobs at any point.
+        var children = xform.ChildEnumerator;
+        var xformQuery = GetEntityQuery<TransformComponent>();
+        while (children.MoveNext(out var child))
+        {
+
+            if (xformQuery.TryGetComponent(child.Value, out var childXform) && !CanSell(child.Value,childXform))
+                return false;
+        }
+
+        var blacklistQuery = GetEntityQuery<CargoSellBlacklistComponent>();
+
+        // Look for blacklisted items and stop the selling of the container.
+        if (blacklistQuery.HasComponent(uid))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void BuyHooks(EntityUid uid)

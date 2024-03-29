@@ -6,6 +6,7 @@ using Content.Shared.Cargo.Components;
 using Content.Shared.Containers.ItemSlots;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
+using Content.Shared.Mobs.Components;
 
 namespace Content.Server.Cargo.Systems;
 
