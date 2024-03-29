@@ -291,3 +291,28 @@
       - id: WeaponPistolViper
       - id: PinpointerNuclear
       - id: HandheldHealthAnalyzer
+
+# Mining Station Dungeon Dig
+
+- type: entity
+  parent: ClothingBackpackDuffel
+  id: ClothingBackpackDuffelFilledShotgun
+  name: Bulldog bundle
+  description: "Lean and mean: Contains the popular drum fed Bulldog shotgun and three 12g drums."
+  components:
+  - type: StorageFill
+    contents:
+      - id: WeaponShotgunBulldog
+      - id: MagazineShotgun
+        amount: 3
+
+- type: entity
+  parent: ClothingBackpackDuffel
+  id: ClothingBackpackDuffelFilledVector
+  name: Bulldog bundle
+  description: "The Vector .40 submachinegun, a lot of automatic power on your hands and one magazine."
+  components:
+  - type: StorageFill
+    contents:
+      - id: WeaponSubMachineGunVector
+      - id: MagazineMagnumSubMachineGun

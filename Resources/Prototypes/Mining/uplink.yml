@@ -19,6 +19,26 @@
   - type: Store
     preset: StorePresetDungeonUplink
 
+- type: listing
+  id: UplinkVectorBundle
+  name: Vector
+  description: The Vector .40 submachinegun, a lot of automatic power on your hands and one magazine
+  productEntity: ClothingBackpackDuffelFilledVector
+  cost:
+    Telecrystal: 18
+  categories:
+  - UplinkWeapons
+
+- type: listing
+  id: UplinkMiningBulldogBundle
+  name: Bulldog
+  description: "Lean and mean: Contains the popular drum fed Bulldog shotgun and three 12g drums."
+  productEntity: ClothingBackpackDuffelFilledShotgun
+  cost:
+    Telecrystal: 25
+  categories:
+  - UplinkWeapons
+
 - type: storeCategory
   id: DungeonUplinkMeds
   name: Medicine
