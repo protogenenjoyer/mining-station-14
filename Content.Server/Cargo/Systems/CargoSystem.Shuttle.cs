@@ -698,10 +698,26 @@ public sealed partial class CargoSystem
             return;
         }
 
+        if (IsBlocked(shuttle))
+        {
+            _popup.PopupEntity(Loc.GetString("cargo-shuttle-console-organics"), player.Value, player.Value);
+            _audio.PlayPvs(_audio.GetSound(component.DenySound), uid);
+            return;
+        }
+
         SellPallets((EntityUid) orderDatabase.Shuttle, out double price);
         bank.Balance += (int) price;
         _console.RefreshShuttleConsoles();
         SendToCargoMap(orderDatabase.Shuttle.Value);
+    }
+
+    private bool IsBlocked(CargoShuttleComponent component)
+    {
+        // TODO: Would be good to rate-limit this on the console.
+        var mobQuery = GetEntityQuery<MobStateComponent>();
+        var xformQuery = GetEntityQuery<TransformComponent>();
+
+        return FoundOrganics(component.Owner, mobQuery, xformQuery);
     }
 
     public bool FoundOrganics(EntityUid uid, EntityQuery<MobStateComponent> mobQuery, EntityQuery<TransformComponent> xformQuery)
