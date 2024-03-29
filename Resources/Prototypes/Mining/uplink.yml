@@ -174,6 +174,16 @@
   categories:
   - DungeonUplinkMeds
 
+- type: listing
+  id: UplinkHelpingHandHarness
+  name: helping hand harness
+  description: A machine arm with a neural interface that grants its wearer an additional manipulator!
+  productEntity: HelpingHandHarness
+  cost:
+    Telecrystal: 10
+  categories:
+  - DungeonUplinkMeds
+
 - type: storeCategory
   id: DungeonUplinkUtil
   name: Utility
