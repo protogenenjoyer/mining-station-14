@@ -263,7 +263,7 @@ public sealed partial class CargoSystem
         if (component == null || shuttle == null || component.Orders.Count == 0)
             return orders;
 
-        var space = GetCargoSpace(shuttle);
+        var space = GetCargoSpace(shuttle.Owner);
 
         if (space == 0) return orders;
 
@@ -382,6 +382,11 @@ public sealed partial class CargoSystem
         var xformQuery = GetEntityQuery<TransformComponent>();
         var blacklistQuery = GetEntityQuery<CargoSellBlacklistComponent>();
         toSell = new HashSet<EntityUid>();
+
+        var stationUid = _station.GetOwningStation(gridUid);
+        if (!TryComp<StationCargoOrderDatabaseComponent>(stationUid, out var orderDatabase) ||
+            !TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
+
         foreach (var pallet in GetCargoPallets(gridUid))
         {
             // Containers should already get the sell price of their children so can skip those.
@@ -557,7 +562,7 @@ public sealed partial class CargoSystem
         var xformQuery = GetEntityQuery<TransformComponent>();
         var orders = GetProjectedOrders(orderDatabase, component);
 
-        var pads = GetCargoPallets(component);
+        var pads = GetCargoPallets(component.Owner);
         DebugTools.Assert(orders.Sum(o => o.Amount) <= pads.Count);
 
         for (var i = 0; i < pads.Count; i++)
@@ -589,6 +594,10 @@ public sealed partial class CargoSystem
     {
         var player = args.Session.AttachedEntity;
 
+        var stationUid = _station.GetOwningStation(uid);
+
+        if (!TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
+
         if (player == null)
             return;
 
@@ -598,9 +607,11 @@ public sealed partial class CargoSystem
             _uiSystem.SetUiState(bui,
             new CargoPalletConsoleInterfaceState(0, 0, false));
             return;
-                orderDatabase.Orders[order.OrderIndex] = order;
-            }
         }
+
+        SellPallets(gridUid, out var price);
+        bank.Balance += (int) price;
+        UpdatePalletConsoleInterface(uid, component);
     }
 
     /// <summary>
@@ -636,11 +647,6 @@ public sealed partial class CargoSystem
         {
             _slots.TryInsert(item, label.LabelSlot, printed, null);
         }
-
-        SellPallets(gridUid, out var price);
-        var stackPrototype = _prototypeManager.Index<StackPrototype>(component.CashType);
-        _stack.Spawn((int)price, stackPrototype, uid.ToCoordinates());
-        UpdatePalletConsoleInterface(uid, component);
     }
 
     private void RecallCargoShuttle(EntityUid uid, CargoShuttleConsoleComponent component, CargoRecallShuttleMessage args)
