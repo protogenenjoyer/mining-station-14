@@ -107,3 +107,9 @@ Entries:
   - { type: Fix, message: "Fixes capacitor in the uplink labeled as matter bin" }
   id: 2560
   time: '2024-03-27T14:43:42.536442-07:00'
+- author: Mining Station 14 Team
+  changes:
+  - { type: Add, message: "Adds helping hand harness to uplink" }
+  - { type: Add, message: "Adds Vector and Bulldog to the uplink, they're not cheap" }
+  id: 2561
+  time: '2024-03-29T22:40:12.151441-07:00'
