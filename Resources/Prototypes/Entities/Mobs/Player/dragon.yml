@@ -94,6 +94,8 @@
         types:
           Piercing: 15
           Slash: 15
+    - type: Tag
+      tags: ["Boss"]
 
 - type: entity
   id: MobDragon

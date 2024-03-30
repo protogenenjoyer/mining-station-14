@@ -163,6 +163,8 @@
   - type: MobPrice
     price: 2900
     deathPenalty: 1 # we cannot sell living space mobs so...
+  - type: Tag
+    tags: ["Boss"]
 
 - type: entity
   name: Drone
@@ -262,6 +264,8 @@
   - type: MobPrice
     price: 10600 # Living critters are valuable in space.
     deathPenalty: 1 # we cannot sell living space mobs so...
+  - type: Tag
+    tags: ["Boss"]
 
 - type: entity
   name: Ravager
@@ -317,6 +321,8 @@
   - type: MobPrice
     price: 1800
     deathPenalty: 1 # we cannot sell living space mobs so...
+  - type: Tag
+    tags: ["Boss"]
 
 - type: entity
   name: Runner
