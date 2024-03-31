@@ -1,0 +1,41 @@
+- type: entity
+  abstract: true
+  parent: BaseItem
+  id: BaseMagazineBoxShotgun
+  name: ammunition box (shotgun shells)
+  components:
+  - type: BallisticAmmoProvider
+    mayTransfer: true
+    whitelist:
+      tags:
+        - ShellShotgun
+    proto: ShellShotgun
+    capacity: 30
+  - type: Item
+    size: 5
+  - type: ContainerContainer
+    containers:
+      ballistic-ammo: !type:Container
+  - type: Sprite
+    sprite: Objects/Weapons/Guns/Ammunition/Boxes/pistol.rsi
+    netsync: false
+  - type: MagazineVisuals
+    magState: mag
+    steps: 2
+    zeroVisible: false
+  - type: Appearance
+
+# Boxes
+- type: entity
+  parent: BaseMagazineBoxShotgun
+  id: MagazineBoxShotgun
+  name: ammunition box (shotgun shells)
+  components:
+  - type: BallisticAmmoProvider
+    proto: ShellShotgun
+  - type: Sprite
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: mag-1
+      map: ["enum.GunVisualLayers.Mag"]
