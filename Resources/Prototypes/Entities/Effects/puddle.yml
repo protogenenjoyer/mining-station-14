@@ -101,7 +101,7 @@
   id: PuddleBlood
   name: blood
   description: This can't be a good sign.
-  parent: PuddleBase
+  parent: EvaporatingPuddle
   components:
   - type: Sprite
     sprite: Fluids/splatter.rsi # Placeholder
@@ -110,6 +110,8 @@
   - type: Puddle
     overflowVolume: 50
     opacityModifier: 8
+  - type: Evaporation
+    evaporateTime: 30
 
 - type: entity
   name: vomit
