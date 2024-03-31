@@ -91,6 +91,9 @@ namespace Content.Server.Mind
         [ViewVariables]
         public TimeSpan? TimeOfDeath { get; set; } = null;
 
+        [ViewVariables]
+        public float TimeSinceGhost = 0f;
+
         /// <summary>
         ///     The component currently owned by this mind.
         ///     Can be null.

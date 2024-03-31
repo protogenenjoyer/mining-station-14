@@ -32,6 +32,7 @@ namespace Content.Server.Mind.Components
         [ViewVariables(VVAccess.ReadWrite)]
         [DataField("ghostOnShutdown")]
         public bool GhostOnShutdown { get; set; } = true;
+
     }
 
     public sealed class MindRemovedMessage : EntityEventArgs

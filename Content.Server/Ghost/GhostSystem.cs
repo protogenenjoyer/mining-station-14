@@ -73,11 +73,22 @@ namespace Content.Server.Ghost
         {
             foreach (var ghost in EntityManager.EntityQuery<GhostComponent, SharedGhostComponent>(true))
             {
-                var elapsedSinceDeath = _gameTiming.CurTime - ghost.Item1.TimeOfDeath;
-                var timeRemaining = ghost.Item1.RespawnTime - (float)elapsedSinceDeath.TotalSeconds;
 
-                if (!EntityManager.TryGetComponent(ghost.Item1.Owner, out ActorComponent? actor))
+                var timeRemaining = 0f;
+
+                if (EntityManager.TryGetComponent(ghost.Item1.Owner, out ActorComponent? actor))
+                {
+                    var playerData = actor.PlayerSession.ContentData();
+                    if (playerData is not null && playerData.Mind is not null)
+                    {
+                        playerData.Mind.TimeSinceGhost += frameTime;
+                        timeRemaining = ghost.Item1.RespawnTime - playerData.Mind.TimeSinceGhost;
+                    }
+                }
+                else
+                {
                     SetCanGhostRespawn(ghost.Item2, false, 0);
+                }
 
                 var autoClonerAvailable = false;
 
@@ -258,6 +269,8 @@ namespace Content.Server.Ghost
                         break;
                 }
             }
+
+            mind.TimeSinceGhost = 0f;
         }
 
         private void OnGhostWarpToTargetRequest(GhostWarpToTargetRequestEvent msg, EntitySessionEventArgs args)
