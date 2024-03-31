@@ -300,6 +300,13 @@ namespace Content.Shared.CCVar
         public static readonly CVarDef<int> InitialBalance =
             CVarDef.Create("game.initial_balance", 2000, CVar.SERVERONLY);
 
+	/*
+	 * Toggles DumpHeat for power consumers
+	 */
+
+        public static readonly CVarDef<bool> DumpHeat =
+            CVarDef.Create("game.dump_heat", true, CVar.SERVERONLY);
+
         /*
          * RL RPC
          */

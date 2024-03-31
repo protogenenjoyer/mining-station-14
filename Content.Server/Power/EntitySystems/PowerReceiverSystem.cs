@@ -12,6 +12,8 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Content.Server.Administration.Managers;
 using Content.Shared.Administration;
+using Content.Shared.CCVar;
+using Robust.Shared.Configuration;
 
 namespace Content.Server.Power.EntitySystems
 {
@@ -22,6 +24,7 @@ namespace Content.Server.Power.EntitySystems
         [Dependency] private readonly AppearanceSystem _appearance = default!;
         [Dependency] private readonly AudioSystem _audio = default!;
         [Dependency] private readonly AtmosphereSystem _atmosphereSystem = default!;
+        [Dependency] private readonly IConfigurationManager _cfg = default!;
 
         public override void Initialize()
         {
@@ -199,6 +202,10 @@ namespace Content.Server.Power.EntitySystems
         private void OnAtmosUpdate(EntityUid uid, ApcPowerReceiverComponent comp, AtmosDeviceUpdateEvent args)
         {
             if (!IsPowered(uid, comp))
+                return;
+
+            var dumpHeatEnabled = _cfg.GetCVar(CCVars.DumpHeat);
+            if (!dumpHeatEnabled)
                 return;
 
             var environment = _atmosphereSystem.GetContainingMixture(uid, true, true);
