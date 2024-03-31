@@ -6,7 +6,7 @@ DOTNET_BUILD=dotnet build ${DOTNET_FLAGS}
 build: noRL
 	${DOTNET_BUILD}
 
-rlbuild: libRL
+rlbuild: RL libRL
 	${DOTNET_BUILD}
 
 fast: build fastserver fastclient
