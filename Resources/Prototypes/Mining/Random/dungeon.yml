@@ -130,7 +130,7 @@
         - Telecrystal5
         - Telecrystal5
         - Telecrystal10
-      rareChance: 0.1
+      rareChance: 0.05
       rarePrototypes:
         - WeaponStaffHealing
         - WeaponStaffPolymorphDoor
