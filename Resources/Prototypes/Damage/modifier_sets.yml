@@ -137,8 +137,8 @@
 - type: damageModifierSet
   id: Skeleton
   coefficients:
-    Blunt: 1.1
-    Slash: 0.8
+    Blunt: 2.0
+    Slash: 1.0
     Piercing: 0.6
     Cold: 0.0
     Poison: 0.0
