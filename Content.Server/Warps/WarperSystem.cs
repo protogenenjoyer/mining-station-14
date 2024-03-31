@@ -300,7 +300,7 @@ public class WarperSystem : EntitySystem
         
         public void Execute(IConsoleShell shell, string argStr, string[] args)
         {
-            if (shell.Player == null || shell.Player.AttachedEntity == null)
+            if (shell.Player == null || shell.Player.AttachedEntity == null || shell.Player.AttachedEntityTransform == null)
             {
                 shell.WriteLine("You need a player and attached entity to use this command.");
                 return;
