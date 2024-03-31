@@ -51,12 +51,18 @@
   components:
     - type: RandomSpawner
       prototypes:
+        - ClothingHeadHelmetHelmet
         - ClothingOuterArmorBulletproof
         - ClothingOuterArmorReflective
+        - ClothingOuterArmorHeavy
         - ClothingOuterVestDetective
         - ClothingOuterVestWebMerc
         - ClothingOuterHardsuitSecurity
         - ClothingOuterArmorScaf
+        - ClothingHeadHelmetScaf
+        - ClothingOuterArmorChangeling
+        - ClothingHeadHelmetThunderdome
+        - ClothingHeadHelmetLing
         - ClothingBeltBandolier
         - MakeshiftShield
         - RiotBulletShield
