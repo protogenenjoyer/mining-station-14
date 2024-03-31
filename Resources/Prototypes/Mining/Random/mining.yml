@@ -102,6 +102,21 @@
         - MobXeno
 
 - type: entity
+  id: DungeonMonsterSpawner
+  name: dungeon monsters
+  parent: MiningRandomSpawner
+  components:
+    - type: RandomSpawner
+      prototypes:
+        - MobBearSpace
+        - MobCarp
+        - MobPurpleSnake
+        - MobGiantSpiderAngry
+        - MobTick
+        - MobTick # extra ticks
+        - MobCaveRat
+
+- type: entity
   id: MiningShaftSpawner
   name: mining shaft stuff
   parent: MiningRandomSpawner
