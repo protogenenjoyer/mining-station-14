@@ -144,6 +144,17 @@
     count: 1
 
 - type: entity
+  parent: SheetPlastic
+  id: SheetPlastic5
+  name: plastic
+  suffix: Five
+  components:
+  - type: Sprite
+    state: plastic
+  - type: Stack
+    count: 5
+
+- type: entity
   noSpawn: true
   parent: SheetOtherBase
   id: SheetUranium
