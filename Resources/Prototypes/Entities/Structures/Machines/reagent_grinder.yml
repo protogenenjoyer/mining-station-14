@@ -52,3 +52,12 @@
       inputContainer: !type:Container
       machine_board: !type:Container
       machine_parts: !type:Container
+
+- type: entity
+  id: KitchenReagentGrinderDungeon
+  parent: KitchenReagentGrinder
+  suffix: grinder/juicer dungeon
+  components:
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0

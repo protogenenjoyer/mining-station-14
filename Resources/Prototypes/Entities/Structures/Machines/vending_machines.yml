@@ -215,6 +215,15 @@
     color: "#4b93ad"
 
 - type: entity
+  id:  VendingMachineChefvendDungeon
+  parent: VendingMachineChefvend
+  suffix: dungeon
+  components:
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0
+
+- type: entity
   parent: VendingMachine
   id: VendingMachineCigs
   name: ShadyCigs Deluxe
@@ -379,6 +388,15 @@
     radius: 1.5
     energy: 1.6
     color: "#4b93ad"
+
+- type: entity
+  id: VendingMachineDinnerwareDungeon
+  parent: VendingMachineDinnerware
+  suffix: dungeon
+  components:
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0
 
 - type: entity
   parent: VendingMachine
@@ -1104,6 +1122,15 @@
     color: "#CCCCCC" #The holy C
 
 - type: entity
+  id: VendingMachineChapelDungeon
+  parent: VendingMachineChapel
+  suffix: dungeon
+  components:
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0
+
+- type: entity
   parent: VendingMachine
   id: VendingMachineCargoDrobe
   name: CargoDrobe
@@ -1258,6 +1285,15 @@
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: AccessReader
     access: [["Kitchen"]]
+
+- type: entity
+  id: VendingMachineChefDrobeDungeon
+  parent: VendingMachineChefDrobe
+  suffix: dungeon
+  components:
+  - type: ApcPowerReceiver
+    needsPower: false
+    powerLoad: 0
 
 - type: entity
   parent: VendingMachine
