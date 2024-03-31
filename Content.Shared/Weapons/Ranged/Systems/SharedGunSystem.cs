@@ -10,6 +10,7 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Popups;
 using Content.Shared.Projectiles;
+using Content.Shared.Spawners.Components;
 using Content.Shared.Throwing;
 using Content.Shared.Verbs;
 using Content.Shared.Weapons.Ranged.Components;
@@ -372,6 +373,10 @@ public abstract partial class SharedGunSystem : EntitySystem
         {
             Audio.PlayPvs(cartridge.EjectSound, entity, AudioParams.Default.WithVariation(0.05f).WithVolume(-1f));
         }
+
+        // Reduce entity spam from cartridges for Dungeon Dig 14.
+        var despawn = EnsureComp<TimedDespawnComponent>(entity);
+        despawn.Lifetime = 15f * 60; // 15 minutes
     }
 
     protected void MuzzleFlash(EntityUid gun, AmmoComponent component, EntityUid? user = null)
