@@ -1,11 +1,13 @@
 using System.Linq;
 
+using Content.Server.Administration;
 using Content.Server.Bible.Components;
 using Content.Server.Chat.Systems;
 using Content.Server.DoAfter;
 using Content.Server.Ghost.Components;
 using Content.Server.NPC.Components;
 using Content.Server.Popups;
+using Content.Shared.Administration;
 using Content.Shared.DragDrop;
 using Content.Shared.GameTicking;
 using Content.Shared.Gravity;
@@ -13,6 +15,7 @@ using Content.Shared.Interaction;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Tag;
 using Robust.Server.GameObjects;
+using Robust.Shared.Console;
 using Robust.Shared.Map;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Systems;
@@ -136,6 +139,18 @@ public class WarperSystem : EntitySystem
         {
             // if it's not going down assume it's going up
             if (Transform(warper.Owner).MapID == id && !warper.Dungeon)
+            {
+                return warper;
+            }
+        }
+        return null;
+    }
+
+    private WarperComponent? FindStairsDown(MapId id)
+    {
+        foreach (var warper in EntityManager.EntityQuery<WarperComponent>())
+        {
+            if (Transform(warper.Owner).MapID == id && warper.Dungeon)
             {
                 return warper;
             }
@@ -274,5 +289,40 @@ public class WarperSystem : EntitySystem
     private void OnMoveFinished(EntityUid uid, WarperComponent component, MoveFinished args)
     {
         DoWarp(component.Owner, args.UserUid, args.VictimUid, component);
+    }
+
+    [AdminCommand(AdminFlags.Debug)]
+    sealed class NextLevelCommand : IConsoleCommand
+    {
+        public string Command => "nextlevel";
+        public string Description => "Find the ladder down and force-apply it";
+        public string Help => "nextlevel";
+        
+        public void Execute(IConsoleShell shell, string argStr, string[] args)
+        {
+            if (shell.Player == null || shell.Player.AttachedEntity == null)
+            {
+                shell.WriteLine("You need a player and attached entity to use this command.");
+                return;
+            }
+
+            var sysMan = IoCManager.Resolve<IEntitySystemManager>();
+            var _ent = IoCManager.Resolve<IEntityManager>();
+            var _warper = sysMan.GetEntitySystem<WarperSystem>();
+            var player = shell.Player.AttachedEntity.Value;
+            var stairs = _warper.FindStairsDown(shell.Player.AttachedEntityTransform.MapID);
+            if (stairs == null)
+            {
+                shell.WriteLine("No stairs found!");
+                return;
+            }
+
+            if (stairs.RequiresCompletion && !_warper.CheckComplete(stairs.Owner, stairs))
+            {
+                shell.WriteLine("The level is not complete but you force your way down anyway.");
+                stairs.RequiresCompletion = false;
+            }
+            _warper.OnActivate(stairs.Owner, stairs, new ActivateInWorldEvent(player, stairs.Owner));
+        }
     }
 }
