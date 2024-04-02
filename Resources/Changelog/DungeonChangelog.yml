@@ -113,3 +113,21 @@ Entries:
   - { type: Add, message: "Adds Vector and Bulldog to the uplink, they're not cheap" }
   id: 2561
   time: '2024-03-29T22:40:12.151441-07:00'
+- author: Mining Station 14 Team
+  changes:
+  - { type: Add, message: "Add always-powered machines in the dungeon" }
+  - { type: Add, message: "Adds more armor" }
+  - { type: Add, message: "Adds some plastic to dungeon loot" }
+  - { type: Add, message: "Levels must now be 80% clear before players can advance" }
+  - { type: Fix, message: "Fix respawn timers" }
+  - { type: Fix, message: "Remove duplicate items" }
+  - { type: Tweak, message: "Automatically despawn ejected cartridges" }
+  - { type: Tweak, message: "Halve bloodloss damage modifiers" }
+  - { type: Tweak, message: "Heavy armor now has 70% damage reduction" }
+  - { type: Tweak, message: "Make blood puddles evaporate slowly" }
+  - { type: Tweak, message: "Makes rare items twice as rare" }
+  - { type: Tweak, message: "Removes Xenos from starting levels" }
+  - { type: Tweak, message: "Removes reduced damage speed modifiers from skeletons" }
+  - { type: Tweak, message: "Skeletons are now more vulnerable to blunt damage" }
+  id: 2562
+  time: '2024-04-01T19:14:59.882319-07:00'
