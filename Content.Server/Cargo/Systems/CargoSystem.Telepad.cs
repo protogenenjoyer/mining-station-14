@@ -26,6 +26,8 @@ public sealed partial class CargoSystem
 
     private void UpdateTelepad(float frameTime)
     {
+        //TODO first get a list of all cargo telepad locations
+
         foreach (var comp in EntityManager.EntityQuery<CargoTelepadComponent>())
         {
             // Don't EntityQuery for it as it's not required.
@@ -51,6 +53,7 @@ public sealed partial class CargoSystem
 
             var station = _station.GetOwningStation(comp.Owner);
 
+            //TODO add check here for pad grid location - if location available don't worry about the station ownership
             if (!TryComp<StationCargoOrderDatabaseComponent>(station, out var orderDatabase) ||
                 orderDatabase.Orders.Count == 0)
             {
@@ -63,6 +66,9 @@ public sealed partial class CargoSystem
             foreach (var (oIndex, oOrder) in orderDatabase.Orders)
             {
                 if (!oOrder.Approved) continue;
+
+                //TODO allow if either the telepad matches the order location OR the location is not list in the location list (in which any station owned telepad can have it)
+
                 orderIndices.Add(oIndex);
             }
 

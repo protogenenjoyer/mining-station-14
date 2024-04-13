@@ -620,13 +620,14 @@ public sealed partial class CargoSystem
 
         var stationUid = _station.GetOwningStation(uid);
 
+        //TODO if there is no station uid or bank account, get player assigned station
         if (!TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
 
         if (player == null)
             return;
 
         var bui = _uiSystem.GetUi(component.Owner, CargoPalletConsoleUiKey.Sale);
-        if (Transform(uid).GridUid is not EntityUid gridUid)
+        if (Transform(uid).GridUid is not EntityUid gridUid) //<-- use this for telepads :)
         {
             _uiSystem.SetUiState(bui,
             new CargoPalletConsoleInterfaceState(0, 0, false));
@@ -683,6 +684,7 @@ public sealed partial class CargoSystem
 
         var stationUid = _station.GetOwningStation(uid);
 
+        //TODO if there is no station uid or bank account, get player assigned station
         if (!TryComp<StationCargoOrderDatabaseComponent>(stationUid, out var orderDatabase) ||
             !TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
 

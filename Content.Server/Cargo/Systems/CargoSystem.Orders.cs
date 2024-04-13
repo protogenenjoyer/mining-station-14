@@ -108,6 +108,7 @@ namespace Content.Server.Cargo.Systems
                 return;
             }
 
+            //TODO add player to args
             var orderDatabase = GetOrderDatabase(component);
             var bankAccount = GetBankAccount(component);
 
@@ -176,6 +177,10 @@ namespace Content.Server.Cargo.Systems
 
         private void OnRemoveOrderMessage(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleRemoveOrderMessage args)
         {
+            //if (args.Session.AttachedEntity is not { Valid: true } player)
+                //return;
+
+            //TODO add player param
             var orderDatabase = GetOrderDatabase(component);
             if (orderDatabase == null) return;
             RemoveOrder(orderDatabase, args.OrderIndex);
@@ -189,11 +194,13 @@ namespace Content.Server.Cargo.Systems
             if (args.Amount <= 0)
                 return;
 
+            //TODO add player param
             var bank = GetBankAccount(component);
             if (bank == null) return;
             var orderDatabase = GetOrderDatabase(component);
             if (orderDatabase == null) return;
 
+            //TODO include console location in order data (not owning station, actual grid)
             var data = GetOrderData(args, GetNextIndex(orderDatabase));
 
             if (!TryAddOrder(orderDatabase, data))
@@ -337,6 +344,7 @@ namespace Content.Server.Cargo.Systems
 
         private StationBankAccountComponent? GetBankAccount(CargoOrderConsoleComponent component)
         {
+            //TODO if there is no station uid or bank account, get player assigned station
             var station = _station.GetOwningStation(component.Owner);
 
             TryComp<StationBankAccountComponent>(station, out var bankComponent);
@@ -345,6 +353,7 @@ namespace Content.Server.Cargo.Systems
 
         private StationCargoOrderDatabaseComponent? GetOrderDatabase(CargoOrderConsoleComponent component)
         {
+            //TODO if there is no station uid or order database, get player assigned station
             var station = _station.GetOwningStation(component.Owner);
 
             TryComp<StationCargoOrderDatabaseComponent>(station, out var orderComponent);
