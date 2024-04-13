@@ -139,6 +139,9 @@
     price: 100 
     deathPenalty: 1 # we cannot sell living space mobs so...
   - type: Perishable
+  - type: Body
+    prototype: Animal
+    requiredLegs: 1
 
 - type: entity
   save: false
@@ -226,6 +229,3 @@
   - type: BiopressHarvest
     id: Creature
     totalReagentUnits: 50
-  - type: Body
-    prototype: Animal
-    requiredLegs: 1
