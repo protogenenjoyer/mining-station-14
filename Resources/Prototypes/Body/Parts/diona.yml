@@ -94,7 +94,7 @@
     container: true
     integrity: 150
     maxIntegrity: 150
-    hitChance: 5
+    hitChance: 7
 
 - type: entity
   id: HeadDiona

@@ -20,6 +20,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Physics.Dynamics;
 using Robust.Shared.Physics.Events;
 using Robust.Shared.Physics.Systems;
+using Content.Shared.Damage.Events;
 
 namespace Content.Server.Atmos.EntitySystems
 {
@@ -59,6 +60,7 @@ namespace Content.Server.Atmos.EntitySystems
             SubscribeLocalEvent<FlammableComponent, RejuvenateEvent>(OnRejuvenate);
             SubscribeLocalEvent<IgniteOnCollideComponent, StartCollideEvent>(IgniteOnCollide);
             SubscribeLocalEvent<IgniteOnMeleeHitComponent, MeleeHitEvent>(OnMeleeHit);
+            SubscribeLocalEvent<FlammableComponent, CriticalIgniteEvent>(OnCriticalIgnite);
         }
 
         private void OnMeleeHit(EntityUid uid, IgniteOnMeleeHitComponent component, MeleeHitEvent args)
@@ -82,6 +84,15 @@ namespace Content.Server.Atmos.EntitySystems
 
             flammable.FireStacks += component.FireStacks;
             Ignite(otherFixture, flammable);
+        }
+
+        private void OnCriticalIgnite(EntityUid uid, FlammableComponent component, CriticalIgniteEvent args)
+        {
+            if (!TryComp<FlammableComponent>(uid, out var flammable))
+                return;
+
+            flammable.FireStacks += 1;
+            Ignite(uid, flammable);     
         }
 
         private void OnMapInit(EntityUid uid, FlammableComponent component, MapInitEvent args)

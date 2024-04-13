@@ -90,7 +90,7 @@
       container: true
       integrity: 50 #rattle rattle
       maxIntegrity: 50
-      hitChance: 5
+      hitChance: 9
 
 - type: entity
   id: HeadSkeleton

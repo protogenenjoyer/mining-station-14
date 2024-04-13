@@ -100,7 +100,7 @@
     container: true
     integrity: 50
     maxIntegrity: 50
-    hitChance: 5
+    hitChance: 2
   - type: Damageable
     damageContainer: Biological
 
@@ -153,6 +153,6 @@
     container: true
     integrity: 250
     maxIntegrity: 250
-    hitChance: 5
+    hitChance: 8
   - type: Damageable
     damageContainer: Biological

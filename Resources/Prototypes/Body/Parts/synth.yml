@@ -90,7 +90,7 @@
     endoSkeleton: true
     integrity: 150
     maxIntegrity: 150
-    hitChance: 5
+    hitChance: 9
 
 - type: entity
   id: HeadSynth

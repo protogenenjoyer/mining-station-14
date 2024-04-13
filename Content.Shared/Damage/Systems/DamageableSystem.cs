@@ -14,6 +14,7 @@ using Content.Shared.Body.Part;
 using Content.Shared.Body.Organ;
 using Content.Shared.Popups;
 using Robust.Shared.Random;
+using Content.Shared.Damage.Events;
 
 namespace Content.Shared.Damage
 {
@@ -202,9 +203,10 @@ namespace Content.Shared.Damage
                 if (TryComp<BodyComponent>(uid, out var body))
                 {
                     //TODO properly parameterise this - cba right now
-                    List<string> integrityDamages = new List<string> { "Blunt", "Piercing", "Slash" };
+                    List<string> integrityDamages = new List<string> { "Blunt", "Piercing", "Slash", "Heat" };
                     List<string> containerDamages = new List<string> { "Piercing" };
                     List<string> criticalDamages = new List<string> { "Slash" };
+                    List<string> igniteDamages = new List<string> { "Heat" }; //I really really really should make this a component but gosh darn it I'm just so lazy
 
                     //init these here so if multi damage is at play they all hit the same part/organ
                     var hitPartIndex = -1;
@@ -212,6 +214,7 @@ namespace Content.Shared.Damage
 
                     //min slash to crit - should be in a component, I'll do it later maybe
                     var minCritDamage = 5;
+                    var minIgniteDamage = 10;
 
                     //check if damage brute (blunt, piercing, slash)
                     foreach (KeyValuePair<string, FixedPoint2> entry in delta.DamageDict)
@@ -331,9 +334,23 @@ namespace Content.Shared.Damage
                                 //roll from 1 to max integrity, if the result is greater than the part's current integrity,
                                 //apply integrity damage equal to current integrity
                                 var critHit = _random.Next(1, (int) Math.Round((double) hitPart.MaxIntegrity) + 1);
-                                if (critHit > hitPart.Integrity - damageValue)
+                                if (critHit > hitPart.Integrity) //- damageValue) <-- leaving this here so people can see what it once was
                                 {
                                     damageValue = hitPart.Integrity;
+                                }
+                            }
+
+                            //if IS root and the damage type is heat, roll for an ignite hit
+                            if (isRoot && igniteDamages.Contains(damageType) && damageValue > minIgniteDamage)
+                            {
+                                //roll from 1 to max integrity, if the result is greater than the torso's current integrity,
+                                //set the owner on fire
+                                var critHit = _random.Next(1, (int) Math.Round((double) hitPart.MaxIntegrity) + 1);
+                                if (critHit > hitPart.Integrity) //- damageValue) <-- leaving this here so people can see what it once was
+                                {
+                                    RaiseLocalEvent(body.Owner, new CriticalIgniteEvent());
+                                    //flammable.Firestasks += 1;
+                                    //_flammable.Ignite(uid, flammable);
                                 }
                             }
 

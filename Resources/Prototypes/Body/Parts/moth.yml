@@ -94,7 +94,7 @@
     exoSkeleton: true
     integrity: 100
     maxIntegrity: 100
-    hitChance: 5
+    hitChance: 7
 
 - type: entity
   id: HeadMoth

@@ -92,7 +92,7 @@
     endoSkeleton: true
     integrity: 110
     maxIntegrity: 110
-    hitChance: 5
+    hitChance: 9
 
 - type: entity
   id: HeadReptilian

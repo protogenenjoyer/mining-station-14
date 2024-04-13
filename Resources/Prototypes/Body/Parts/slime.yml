@@ -95,7 +95,7 @@
       endoSkeleton: false
       integrity: 150 #torso has higher integrity as it has fewer organs to protect (the bullets just float in there or something...)
       maxIntegrity: 150
-      hitChance: 5
+      hitChance: 9
 
 - type: entity
   id: HeadSlime
