@@ -164,12 +164,11 @@ namespace Content.Client.Surgery
                             if (slotParts[partUid.Value] is not null && !slotParts[partUid.Value].Working)
                             {
                                 var blockedIcon = new BlockIconContainer("blocked");
+                                blockedIcon.OnPressed += args => OnSurgerySlotButtonPressed?.Invoke(args, button);
                                 button.Children.Add(blockedIcon);
                             }
                         }
                     }
-
-
 
                     buttonContainer.Children.Add(iconRow);
                     buttonContainer.Children.Add(button);
