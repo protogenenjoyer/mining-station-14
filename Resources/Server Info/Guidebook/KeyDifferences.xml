@@ -3,14 +3,9 @@
 
 - Spacing in this sector is significantly more deadly.
 
-- Generators require fuel to produce power.
+- Electrical equipment produce heat, especially generators, which must be dealt with to prevent machine overheating and failure.
 <Box>
-<GuideEntityEmbed Entity="SheetPlasma"/>
-<GuideEntityEmbed Entity="GeneratorPlasma"/>
-</Box>
-
-- Electrical equipment produce heat, which must be dealt with to prevent machine overheating and failure.
-<Box>
+  <GuideEntityEmbed Entity="GeneratorPlasma"/>
 <GuideEntityEmbed Entity="GasPassiveVent"/>
 <GuideEntityEmbed Entity="GasThermoMachineFreezer"/>
 </Box>
@@ -40,5 +35,7 @@
   <GuideEntityEmbed Entity="LeftDrillArm"/>
   <GuideEntityEmbed Entity="LeftLegPower"/>
 </Box>
+
+- Body parts can become disabled or outright detached if they take too much damage. Be sure to find your local surgeon to repair your limbs!
 
 </Document>
