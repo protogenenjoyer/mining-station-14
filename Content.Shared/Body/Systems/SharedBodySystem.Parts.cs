@@ -43,7 +43,8 @@ public partial class SharedBodySystem
             part.EndoSkeleton,
             part.ExoSkeleton,
             part.EndoOpened,
-            part.ExoOpened
+            part.ExoOpened,
+            part.Working
         );
     }
 
@@ -69,6 +70,7 @@ public partial class SharedBodySystem
         part.ExoSkeleton = state.ExoSkeleton;
         part.EndoOpened = state.EndoOpened;
         part.ExoOpened = state.ExoOpened;
+        part.Working = state.Working;
     }
 
     private void OnPartRemoved(EntityUid uid, BodyPartComponent part, ComponentRemove args)
@@ -380,6 +382,7 @@ public partial class SharedBodySystem
             }
 
             Dirty(newBody);
+            Dirty(partId);
         }
         return true;
     }

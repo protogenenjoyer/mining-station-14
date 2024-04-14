@@ -597,7 +597,7 @@ namespace Content.Server.Surgery
                     if (TryComp<BodyPartComponent>(slot.Child, out var bodyPart))
                     {
                         var retracted = (bodyPart.Attachment != null && TryComp<SurgeryToolComponent>(bodyPart.Attachment, out var tool) && tool.Retractor);
-                        slotParts.Add(slot.Child.Value, new SharedPartStatus(bodyPart.PartType, retracted, bodyPart.Incised, bodyPart.Opened, bodyPart.EndoOpened, bodyPart.ExoOpened));
+                        slotParts.Add(slot.Child.Value, new SharedPartStatus(bodyPart.PartType, retracted, bodyPart.Incised, bodyPart.Opened, bodyPart.EndoOpened, bodyPart.ExoOpened, bodyPart.Working));
                     }
 
             var state = new SurgeryBoundUserInterfaceState(bodyPartSlots, organSlots, slotParts);

@@ -24,6 +24,7 @@ public sealed class BodyPartComponentState : ComponentState
     public readonly bool ExoSkeleton;
     public readonly bool EndoOpened;
     public readonly bool ExoOpened;
+    public readonly bool Working;
 
     public BodyPartComponentState(
         EntityUid? body,
@@ -42,7 +43,8 @@ public sealed class BodyPartComponentState : ComponentState
         bool endoSkeleton,
         bool exoSkeleton,
         bool endoOpened,
-        bool exoOpened)
+        bool exoOpened,
+        bool working)
     {
         ParentSlot = parentSlot;
         Children = children;
@@ -61,5 +63,6 @@ public sealed class BodyPartComponentState : ComponentState
         ExoSkeleton = exoSkeleton;
         EndoOpened = endoOpened;
         ExoOpened = exoOpened;
+        Working = working;
     }
 }

@@ -161,8 +161,15 @@ namespace Content.Client.Surgery
                             bodyPartSprite.Sprite = sprite;
 
                             button.Children.Add(bodyPartSprite);
+                            if (slotParts[partUid.Value] is not null && !slotParts[partUid.Value].Working)
+                            {
+                                var blockedIcon = new BlockIconContainer("blocked");
+                                button.Children.Add(blockedIcon);
+                            }
                         }
                     }
+
+
 
                     buttonContainer.Children.Add(iconRow);
                     buttonContainer.Children.Add(button);
@@ -409,6 +416,16 @@ namespace Content.Client.Surgery
                 MinSize = (DefaultButtonSize/3, DefaultButtonSize/3);
                 MaxSize = (DefaultButtonSize/3, DefaultButtonSize/3);
                 TextureNormal = Theme.ResolveTexture("/SurgerySlots/"+iconType);
+            }
+        }
+
+        public sealed class BlockIconContainer : TextureButton
+        {
+            public BlockIconContainer(string iconType)
+            {
+                MinSize = (DefaultButtonSize, DefaultButtonSize);
+                MaxSize = (DefaultButtonSize, DefaultButtonSize);
+                TextureNormal = Theme.ResolveTexture("/SurgerySlots/" + iconType);
             }
         }
 
