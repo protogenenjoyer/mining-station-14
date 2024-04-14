@@ -60,6 +60,13 @@ public partial class SharedBodySystem
                 if (!isRoot)
                 {
                     DisablePart(uid, part);
+                    //if the damage is greater than or equal to the parts max integrity, allow for instant dismemberment
+                    if (damage >= part.MaxIntegrity)
+                    {
+                        part.AttachmentIntegrity = 0;
+                        DropPart(uid, part);
+                        return true;
+                    }                 
                 }
             }
             else if (part.Integrity - damage >= part.MaxIntegrity)

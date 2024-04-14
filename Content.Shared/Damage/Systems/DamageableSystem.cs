@@ -336,10 +336,7 @@ namespace Content.Shared.Damage
                                 var critHit = _random.Next(1, (int) Math.Round((double) hitPart.MaxIntegrity) + 1);
                                 if (critHit > hitPart.Integrity) //- damageValue) <-- leaving this here so people can see what it once was
                                 {
-                                    if (hitPart.Working)
-                                        damageValue = hitPart.Integrity;
-                                    else
-                                        damageValue = hitPart.AttachmentIntegrity;
+                                    damageValue = hitPart.MaxIntegrity;
                                 }
                             }
 
