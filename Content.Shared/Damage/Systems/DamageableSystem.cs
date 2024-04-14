@@ -332,11 +332,14 @@ namespace Content.Shared.Damage
                             if (!isRoot && criticalDamages.Contains(damageType) && damageValue > minCritDamage)
                             {
                                 //roll from 1 to max integrity, if the result is greater than the part's current integrity,
-                                //apply integrity damage equal to current integrity
+                                //apply integrity damage equal to current integrity or attachment integrity
                                 var critHit = _random.Next(1, (int) Math.Round((double) hitPart.MaxIntegrity) + 1);
                                 if (critHit > hitPart.Integrity) //- damageValue) <-- leaving this here so people can see what it once was
                                 {
-                                    damageValue = hitPart.Integrity;
+                                    if (hitPart.Working)
+                                        damageValue = hitPart.Integrity;
+                                    else
+                                        damageValue = hitPart.AttachmentIntegrity;
                                 }
                             }
 

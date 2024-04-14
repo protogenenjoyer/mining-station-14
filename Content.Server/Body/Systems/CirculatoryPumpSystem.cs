@@ -16,6 +16,7 @@ using Content.Shared.Rejuvenate;
 using Content.Server.Surgery;
 using Content.Server.Popups;
 using Content.Shared.Body.Organ;
+using Content.Shared.Body.Part;
 
 namespace Content.Server.Body.Systems
 {
@@ -60,9 +61,13 @@ namespace Content.Server.Body.Systems
                         //mob MUST have a brain, else stop the pump  
                         var organs = _surgerySystem.GetAllBodyOrgans(uid);
                         var hasBrain = false;
-                        foreach (var organ in organs)
+                        foreach (var organId in organs)
                         {
-                            if (TryComp<BrainComponent>(organ, out var brain))
+                            if (TryComp<BrainComponent>(organId, out var brain)
+                                && TryComp<OrganComponent>(organId, out var organ)
+                                && organ.ParentSlot is not null
+                                && TryComp<BodyPartComponent>(organ.ParentSlot.Parent, out var part)
+                                && part.Working)
                             {
                                 hasBrain = true;
                                 break;

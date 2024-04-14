@@ -867,7 +867,9 @@ namespace Content.Server.Surgery
 
             //check if actually incised
             if (!bodyPart.Incised)
+            {
                 return false;
+            }
 
             //don't close the incision until their bones are back together
             if (bodyPart.EndoSkeleton && bodyPart.EndoOpened)
@@ -928,6 +930,8 @@ namespace Content.Server.Surgery
             //then for an exoskeleton
             else if (bodyPart.ExoSkeleton)
                 endo = false;
+            else if (!bodyPart.Working && bodyPart.ParentSlot is not null)
+                return await EnablePart(user, tool, target, bodyPart.ParentSlot, bodyPart, userHands, timeOverride);
             else
                 return false;        
 
@@ -1012,6 +1016,55 @@ namespace Content.Server.Surgery
             _bodySystem.SetCauterisedOrganSlot(organSlot, true);
 
             SetBodyStatusFromChange(target, ToolUsage.Cauterizer);
+
+            UpdateUiState(target);
+
+            return true;
+        }
+
+        private async Task<bool> EnablePart(EntityUid user, SurgeryToolComponent tool, EntityUid target, BodyPartSlot bodyPartSlot, BodyPartComponent bodyPart, HandsComponent userHands, bool timeOverride)
+        {
+
+            //check if part is actually attached to a slot
+            if (bodyPart.ParentSlot is null || bodyPart.Owner == target)
+                return false;
+
+            //ensure part type matches the slot type
+            if (bodyPart.PartType != bodyPartSlot.Type)
+                return false;
+
+            if (!timeOverride)
+                if (!(await ProcedureDoAfter(user, target, tool.DrillTime * tool.DrillTimeMod, tool))) return false;
+
+            _audio.PlayPvs(tool.ToolSound, tool.Owner);
+
+            if (!(_bodySystem.EnablePart(bodyPart.Owner, bodyPartSlot, bodyPart))) return false;
+
+            _popupSystem.PopupEntity(Loc.GetString("Body Part Repaired"), user, user); //TODO LOC
+
+            SetBodyStatusFromChange(target, ToolUsage.Drill);
+
+            UpdateUiState(target);
+
+            return true;
+        }
+
+        private async Task<bool> DisablePart(EntityUid user, SurgeryToolComponent tool, EntityUid target, BodyPartComponent bodyPart, HandsComponent userHands, bool timeOverride)
+        {
+            //check if part is actually attached to a slot
+            if (bodyPart.ParentSlot is null || bodyPart.Owner == target)
+                return false;
+
+            if (!timeOverride)
+                if (!(await ProcedureDoAfter(user, target, tool.SawTime * tool.SawTimeMod, tool))) return false;
+
+            _audio.PlayPvs(tool.ToolSound, tool.Owner);
+
+            if (!(_bodySystem.DisablePart(bodyPart.Owner, bodyPart))) return false;
+
+            _popupSystem.PopupEntity(Loc.GetString("Body Part Disabled"), user, user); //TODO LOC
+
+            SetBodyStatusFromChange(target, ToolUsage.Saw);
 
             UpdateUiState(target);
 
@@ -1193,8 +1246,12 @@ namespace Content.Server.Surgery
                 else
                     return false;
             }
+            else if (bodyPart.Working && !bodyPart.Incised && (!bodyPart.ExoSkeleton || bodyPart.ExoOpened) && bodyPart.ParentSlot is not null && !bodyPart.ParentSlot.IsRoot)
+            {
+                return await DisablePart(user, tool, target, bodyPart, userHands, timeOverride);
+            }
             //if its not incised, has no exo or an open exo, is not a root part, then remove the part from its slot
-            else if (!bodyPart.Incised && (!bodyPart.ExoSkeleton || bodyPart.ExoOpened) && bodyPart.ParentSlot is not null && !bodyPart.ParentSlot.IsRoot)
+            else if (!bodyPart.Working && !bodyPart.Incised && (!bodyPart.ExoSkeleton || bodyPart.ExoOpened) && bodyPart.ParentSlot is not null && !bodyPart.ParentSlot.IsRoot)
             {
                 return await RemovePart(user, tool, target, bodyPart, userHands, timeOverride);
             }

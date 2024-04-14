@@ -51,24 +51,50 @@ public partial class SharedBodySystem
 
     public bool ChangePartIntegrity(EntityUid uid, BodyPartComponent part, FixedPoint2 damage, bool isRoot)
     {
-        if (part.Integrity - damage <= 0)
+        if (part.Working)
         {
-            part.Integrity = 0;
-
-            //remove part from body (unless it is root)
-            if (!isRoot)
+            if (part.Integrity - damage <= 0)
             {
-                DropPart(uid, part);
-                return true;
+                part.Integrity = 0;
+                //call function to "remove" part without removing it (unless it is root)
+                if (!isRoot)
+                {
+                    DisablePart(uid, part);
+                }
             }
-
-        } else if (part.Integrity - damage >= part.MaxIntegrity)
-        {
-            part.Integrity = part.MaxIntegrity;
+            else if (part.Integrity - damage >= part.MaxIntegrity)
+            {
+                part.Integrity = part.MaxIntegrity;
+            }
+            else
+            {
+                part.Integrity -= (float) damage;
+            }
         } else
         {
-            part.Integrity -= (float) damage;
+            //if a part stops working, we start tracking AttachmentIntegrity instead
+            if (part.AttachmentIntegrity - damage <= 0)
+            {
+                part.AttachmentIntegrity = 0;
+
+                //remove part from body (unless it is root)
+                if (!isRoot)
+                {
+                    DropPart(uid, part);
+                    return true;
+                }
+
+            }
+            else if (part.Integrity - damage >= part.MaxIntegrity)
+            {
+                part.AttachmentIntegrity = part.MaxIntegrity;
+            }
+            else
+            {
+                part.AttachmentIntegrity -= (float) damage;
+            }
         }
+        
         return false;
     }
 
