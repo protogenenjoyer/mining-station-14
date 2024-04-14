@@ -38,6 +38,16 @@
 
   Sometimes tools will work as attachments, either to the slot or the part itself. To remove an attach tool, click on the relevant part/slot while empty handed.
 
+  ## Repairing body parts.
+
+  Sometimes a body part will stop functioning due to taking too much damage. Most of the time the part can be repaired by applying metal suture to it.
+
+  <Box>
+    <GuideEntityEmbed Entity="MetalSuture"/>
+  </Box>
+
+  You will know that it is fixed if the red circle slash symbol is gone. If not gone after applying metal suture, you might have just closed an exoskeleton or open incision - try again!
+
   ## Adding and removing a body part
 
   Body parts that can be removed include heads, arms, legs, hands, and feet. Each can be removed and replaced.
@@ -54,7 +64,7 @@
     <GuideEntityEmbed Entity="Tourniquet"/>
   </Box>
 
-  3) Apply a saw to the body part to be removed. Some species have an exoskeleton and so the saw may need to be applied twice.
+  3) Apply a saw to the body part to be removed. You will need to apply the saw twice. Some species have an exoskeleton and so the saw may need to be applied three times.
 
   <Box>
     <GuideEntityEmbed Entity="Saw"/>
@@ -75,7 +85,7 @@
     <GuideEntityEmbed Entity="RightArmSynth"/>
   </Box>
 
-  7) Use metal suture to stitch close any open exoskeleton the part may have.
+  7) Sometimes metal suture will be needed to either repair the part, or close an exoskeleton.
 
   <Box>
     <GuideEntityEmbed Entity="MetalSuture"/>
