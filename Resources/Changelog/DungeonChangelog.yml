@@ -131,3 +131,15 @@ Entries:
   - { type: Tweak, message: "Skeletons are now more vulnerable to blunt damage" }
   id: 2562
   time: '2024-04-01T19:14:59.882319-07:00'
+- author: Mining Station 14 Team
+  changes:
+  - { type: Add, message: "Add heat-based damage that can ignite targets" }
+  - { type: Add, message: "Added piercing damage to laser weapons" }
+  - { type: Tweak, message: "Adjust limb hit chance on players and mobs" }
+  - { type: Tweak, message: "All mobs now have animal organs" }
+  - { type: Tweak, message: "Nerf chitinous armor protection but makes it a little lighter" }
+  - { type: Tweak, message: "Nerf thunderdome helmet" }
+  - { type: Tweak, message: "Nerf chitinous helmet which is still strong but in line with other helmets" }
+  - { type: Tweak, message: "Holoparasites now have less health, but no longer take bloodloss, cold, radiation, or poison damage" }
+  id: 2563
+  time: '2024-04-15T10:41:13.562609-07:00'
