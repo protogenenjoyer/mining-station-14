@@ -128,13 +128,23 @@ namespace Content.Server.Hands.Systems
                 {
                     if (entry.Value.Child != null && entry.Value.Type == BodyPartType.Hand &&
                         TryComp(entry.Value.Child, out BodyPartComponent? childPart) &&
-                        childPart.PartType == BodyPartType.Hand)
+                        childPart.PartType == BodyPartType.Hand && childPart.Working)
                     {
                         hasHand = true;
                         handSlot = entry.Value.Id;
                         break;
                     }
                 }
+            }
+
+            var handParentWorking = false;
+            if (args.Part.PartType == BodyPartType.Hand)
+            {
+                if (args.Part.ParentSlot is not null
+                && TryComp(args.Part.ParentSlot.Parent, out BodyPartComponent? parentPart)
+                && parentPart.Working
+                )
+                    handParentWorking = true;
             }
 
             // If this annoys you, which it should.
@@ -147,7 +157,7 @@ namespace Content.Server.Hands.Systems
                 _ => throw new ArgumentOutOfRangeException(nameof(args.Part.Symmetry))
             };
 
-            if ((args.Part.PartType == BodyPartType.Hand || hasHand) && TryComp(uid, out SharedHandsComponent? sharedHandComp))
+            if (((args.Part.PartType == BodyPartType.Hand && handParentWorking || hasHand)) && TryComp(uid, out SharedHandsComponent? sharedHandComp))
                 AddHand(uid, handSlot, location, sharedHandComp);
         }
 
@@ -166,7 +176,7 @@ namespace Content.Server.Hands.Systems
                 {
                     if (entry.Value.Child != null && entry.Value.Type == BodyPartType.Hand &&
                         TryComp(entry.Value.Child, out BodyPartComponent? childPart) &&
-                        childPart.PartType == BodyPartType.Hand)
+                        childPart.PartType == BodyPartType.Hand && childPart.Working)
                     {
                         hasHand = true;
                         handSlot = entry.Value.Id;
@@ -176,7 +186,7 @@ namespace Content.Server.Hands.Systems
             }
 
             //TODO technically arms COULD have multiple hands but lets worry about that later
-            if ((args.Part.PartType == BodyPartType.Hand || hasHand) && TryComp(uid, out SharedHandsComponent? sharedHandComp))
+            if (((args.Part.PartType == BodyPartType.Hand && args.Part.ParentSlot is not null) || hasHand) && TryComp(uid, out SharedHandsComponent? sharedHandComp))
                 RemoveHand(uid, handSlot, sharedHandComp);
         }
 

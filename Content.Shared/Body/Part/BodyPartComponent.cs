@@ -68,6 +68,9 @@ public sealed class BodyPartComponent : Component
     [ViewVariables]
     public bool Opened = false; //whether or not the body part has been opened up (any obstructing endoskeleton not yet factored)
 
+    [ViewVariables]
+    public bool Working = true; //whether or not the body part is functional - will act as though not attached but still be in the part slot
+
     /// <summary>
     /// though a part may be opened, the organs may be behind bones!
     /// instead it may have an exoskeleton (see below) or no skeleton at all (slimes for example)!
@@ -88,12 +91,17 @@ public sealed class BodyPartComponent : Component
     [ViewVariables]
     public bool ExoOpened = false; //gotta get through the shell or whatever it is (if they have them)
 
-    //when integrity reaches zero, the part will eject from its slot
+    //when integrity reaches zero, the part will stop working
     [DataField("integrity")]
     public float Integrity = 100;
 
     [DataField("maxIntegrity")]
     public float MaxIntegrity = 100;
+
+    //when integrity reaches zero, the part will eject from its slot
+    //this should be set to max integrity whenever it is attached
+    [ViewVariables]
+    public float AttachmentIntegrity = 0;
 
     [DataField("healingTime")]
     public float HealingTime = 30;

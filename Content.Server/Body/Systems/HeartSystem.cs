@@ -60,7 +60,7 @@ namespace Content.Server.Body.Systems
             if (!pump.Embedded)
                 RemComp<CirculatoryPumpComponent>(oldEntity);
 
-            //if we just placed this in a body, kickstart the heart TODO consider removing once defibs are ported (or not?)
+            //if we just placed this in a body, kickstart the heart
             if (TryComp<BodyComponent>(newEntity, out var body))
                 _pumpSystem.StartPump(newEntity, pump);
         }

@@ -21,8 +21,9 @@ namespace Content.Shared.Surgery
         public bool Opened;
         public bool EndoOpened;
         public bool ExoOpened;
+        public bool Working;
 
-        public SharedPartStatus(BodyPartType partType, bool retracted, bool incised, bool opened, bool endoOpened, bool exoOpened)
+        public SharedPartStatus(BodyPartType partType, bool retracted, bool incised, bool opened, bool endoOpened, bool exoOpened, bool working)
         {
             PartType = partType;
             Retracted = retracted;
@@ -30,6 +31,7 @@ namespace Content.Shared.Surgery
             Opened = opened;
             EndoOpened = endoOpened;
             ExoOpened = exoOpened;
+            Working = working;
         }
     }
 
