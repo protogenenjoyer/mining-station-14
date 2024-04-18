@@ -111,7 +111,9 @@ public sealed class RLMapGen : EntitySystem
                 int tx = v.X - minX;
                 int ty = v.Y - minY;
 #if RL
-                RL.si_aset(4, arg, RL.num(tx), RL.num(ty), RL.num(val));
+                var try_aset = RL.readstr("try-aset");
+                var form2 = RL.list5(try_aset, arg, RL.num(tx), RL.num(ty), RL.num(val));
+                RL.eval(form2);
 #else
                 var req = new TileRequest();
                 req.Request = (uint)val;
