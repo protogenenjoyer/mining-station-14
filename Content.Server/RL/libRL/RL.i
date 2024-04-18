@@ -53,6 +53,14 @@ cl_object list3(cl_object a, cl_object b, cl_object c) {
     return cl_list(3, a, b, c);
 }
 
+cl_object list4(cl_object a, cl_object b, cl_object c, cl_object d) {
+    return cl_list(4, a, b, c, d);
+}
+
+cl_object list5(cl_object a, cl_object b, cl_object c, cl_object d, cl_object e) {
+    return cl_list(5, a, b, c, d, e);
+}
+
 cl_object call(const char *s) {
     return cl_list(1, ecl_read_from_cstring(s));
 }
@@ -142,6 +150,8 @@ extern const char* cstr(const cl_object o);
 extern cl_object list(void);
 extern cl_object list2(cl_object a, cl_object b);
 extern cl_object list3(cl_object a, cl_object b, cl_object c);
+extern cl_object list4(cl_object a, cl_object b, cl_object c, cl_object d);
+extern cl_object list5(cl_object a, cl_object b, cl_object c, cl_object d, cl_object e);
 extern cl_object add(cl_object l, cl_object arg);
 extern cl_object call(const char *s);
 extern cl_object readstr(const char *s);
