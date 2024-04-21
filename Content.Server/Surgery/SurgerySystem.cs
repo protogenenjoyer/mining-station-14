@@ -1337,7 +1337,7 @@ namespace Content.Server.Surgery
                 }
 
                 //large clamp - intended to prevent bleeding on part removal (used as an attachment to the slot)
-                if (tool.LargeClamp && (timeOverride || (!timeOverride && utilityCounter == 0)))
+                if (tool.LargeClamp && (timeOverride || (!timeOverride && utilityCounter == 0)) && args.Slot.Attachment is null)
                 {
                     timeOverride = await AttachLargeClamp(user, tool, uid, args.Slot, userHands, timeOverride); //does not work on slots with IsRoot
                     utilityCounter++;
