@@ -1,7 +1,7 @@
 namespace Content.Server.Station.Components;
 
 /// <summary>
-/// Stores Station Assignment Information of a Player
+/// Stores Station Assignment Information of a Player/Entity
 /// </summary>
 [RegisterComponent]
 public sealed class StationAssignmentComponent : Component
