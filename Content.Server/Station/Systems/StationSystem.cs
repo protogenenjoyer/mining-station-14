@@ -83,6 +83,19 @@ public sealed class StationSystem : EntitySystem
         stationData.Grids.Remove(uid);
     }
 
+    public override void Update(float frameTime)
+    {
+        foreach (var comp in EntityManager.EntityQuery<StationAssignmentComponent>())
+        {
+            if (!comp.StationAssignmentLocked) {
+                var station = GetOwningStation(comp.Owner);
+                //assign station to comp
+                if (station is not null)
+                    comp.AssignedStationUid = station;
+            }
+        }
+    }
+
     public override void Shutdown()
     {
         base.Shutdown();

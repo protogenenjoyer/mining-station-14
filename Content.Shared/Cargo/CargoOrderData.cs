@@ -19,7 +19,10 @@ namespace Content.Shared.Cargo
         public bool Approved => Approver is not null;
         public string? Approver;
 
-        public CargoOrderData(int orderIndex, string productId, int price, int amount, string requester, string reason)
+        //order location - to help determine which telepad the order should go to
+        public EntityUid Grid;
+
+        public CargoOrderData(int orderIndex, string productId, int price, int amount, string requester, string reason, EntityUid grid)
         {
             OrderIndex = orderIndex;
             ProductId = productId;
@@ -27,6 +30,7 @@ namespace Content.Shared.Cargo
             Amount = amount;
             Requester = requester;
             Reason = reason;
+            Grid = grid;
         }
 
         public void SetApproverData(IdCardComponent? idCard)

@@ -31,5 +31,6 @@
       damageRecovery:
         types:
           Asphyxiation: -1.5
-    - type: MiningCredit 
+    - type: MiningCredit
+    - type: StationAssignment 
 #Weh
