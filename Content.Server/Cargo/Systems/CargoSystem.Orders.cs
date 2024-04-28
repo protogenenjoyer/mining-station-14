@@ -19,6 +19,7 @@ using Robust.Shared.Player;
 using Robust.Shared.Players;
 using Robust.Shared.Prototypes;
 using Content.Server.Station.Components;
+using Content.Server.Database;
 
 namespace Content.Server.Cargo.Systems
 {
@@ -221,7 +222,20 @@ namespace Content.Server.Cargo.Systems
 
         private void OnOrderUIOpened(EntityUid uid, CargoOrderConsoleComponent component, BoundUIOpenedEvent args)
         {
+            if (args.Session.AttachedEntity is not { Valid: true } player)
+                return;
+
             var station = _station.GetOwningStation(uid);
+            if (station is null)
+            {
+                //get assigned station component off player
+                if (TryComp<StationAssignmentComponent>(player, out var assignedStation) &&
+                    assignedStation.AssignedStationUid is not null)
+                {
+                    //get station uid via assigned station component and get station via station uid
+                    station = _station.GetOwningStation(assignedStation.AssignedStationUid.Value);
+                }
+            }
             UpdateOrderState(component, station);
         }
 
