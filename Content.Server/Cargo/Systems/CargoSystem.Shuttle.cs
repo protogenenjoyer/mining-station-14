@@ -35,6 +35,7 @@ using Content.Shared.Stacks;
 using Robust.Shared.Prototypes;
 using Content.Shared.Coordinates;
 using Content.Shared.Mobs;
+using static System.Collections.Specialized.BitVector32;
 
 namespace Content.Server.Cargo.Systems;
 
@@ -283,7 +284,7 @@ public sealed partial class CargoSystem
 
             if (cappedAmount < order.Amount)
             {
-                var reducedOrder = new CargoOrderData(order.OrderIndex, order.ProductId, order.Price, cappedAmount, order.Requester, order.Reason);
+                var reducedOrder = new CargoOrderData(order.OrderIndex, order.ProductId, order.Price, cappedAmount, order.Requester, order.Reason, order.Grid);
 
                 orders.Add(reducedOrder);
                 break;
@@ -620,10 +621,18 @@ public sealed partial class CargoSystem
 
         var stationUid = _station.GetOwningStation(uid);
 
-        //TODO if there is no station uid or bank account, get player assigned station
-        if (!TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
-
         if (player == null)
+            return;
+
+        //get assigned station component off player if available
+        if (TryComp<StationAssignmentComponent>(player, out var assignedStation) &&
+            assignedStation.AssignedStationUid is not null)
+        {
+            //get station uid via assigned station component and get station via station uid
+            stationUid = _station.GetOwningStation(assignedStation.AssignedStationUid.Value);
+        }
+
+        if (!TryComp<StationBankAccountComponent>(stationUid, out var bank))
             return;
 
         var bui = _uiSystem.GetUi(component.Owner, CargoPalletConsoleUiKey.Sale);
@@ -684,7 +693,14 @@ public sealed partial class CargoSystem
 
         var stationUid = _station.GetOwningStation(uid);
 
-        //TODO if there is no station uid or bank account, get player assigned station
+        //get assigned station component off player if available
+        if (TryComp<StationAssignmentComponent>(player, out var assignedStation) &&
+            assignedStation.AssignedStationUid is not null)
+        {
+            //get station uid via assigned station component and get station via station uid
+            stationUid = _station.GetOwningStation(assignedStation.AssignedStationUid.Value);
+        }
+
         if (!TryComp<StationCargoOrderDatabaseComponent>(stationUid, out var orderDatabase) ||
             !TryComp<StationBankAccountComponent>(stationUid, out var bank)) return;
 

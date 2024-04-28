@@ -33,7 +33,7 @@
     factions:
     - NanoTrasen
   - type: MiningCredit
-  #-type: AssignedStation TODO: system that assigns station to player when they arrive to said station (if not already assigned)
+  - type: StationAssignment
 
 #Syndie
 - type: entity

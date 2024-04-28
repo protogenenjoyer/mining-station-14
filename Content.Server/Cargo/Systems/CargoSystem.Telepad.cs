@@ -8,6 +8,7 @@ using Content.Shared.Cargo.Prototypes;
 using Robust.Shared.Audio;
 using Robust.Shared.Collections;
 using Robust.Shared.Player;
+using System.Collections.Generic;
 
 namespace Content.Server.Cargo.Systems;
 
@@ -26,7 +27,26 @@ public sealed partial class CargoSystem
 
     private void UpdateTelepad(float frameTime)
     {
-        //TODO first get a list of all cargo telepad locations
+        //Get a list of all cargo telepad locations (grids)
+        List<EntityUid> padGrids = new List<EntityUid>();
+
+        foreach (var comp in EntityManager.EntityQuery<CargoTelepadComponent>())
+        {
+            if (Transform(comp.Owner).GridUid is EntityUid gridUid)
+                padGrids.Add(gridUid);
+        }
+
+        //Get all orders from all order databases
+        List<(int, CargoOrderData, StationCargoOrderDatabaseComponent)> orders = new List<(int, CargoOrderData, StationCargoOrderDatabaseComponent)>();
+        foreach (var comp in EntityManager.EntityQuery<StationCargoOrderDatabaseComponent>())
+        {
+            foreach (var (oIndex, oOrder) in comp.Orders)
+            {
+                orders.Add((oIndex, oOrder, comp));
+            }
+        }
+        //order by index
+        orders.Sort((x, y) => y.Item1.CompareTo(x.Item1));
 
         foreach (var comp in EntityManager.EntityQuery<CargoTelepadComponent>())
         {
@@ -51,40 +71,37 @@ public sealed partial class CargoSystem
                 continue;
             }
 
-            var station = _station.GetOwningStation(comp.Owner);
-
-            //TODO add check here for pad grid location - if location available don't worry about the station ownership
-            if (!TryComp<StationCargoOrderDatabaseComponent>(station, out var orderDatabase) ||
-                orderDatabase.Orders.Count == 0)
-            {
-                comp.Accumulator += comp.Delay;
+            if (Transform(comp.Owner).GridUid is not EntityUid gridUid)
                 continue;
-            }
 
-            var orderIndices = new ValueList<int>();
+            StationCargoOrderDatabaseComponent? orderDatabase = null;
+            int? index = null;
+            CargoOrderData? order = null;
 
-            foreach (var (oIndex, oOrder) in orderDatabase.Orders)
+            foreach (var (oIndex, oOrder, oDatabase) in orders)
             {
                 if (!oOrder.Approved) continue;
 
-                //TODO allow if either the telepad matches the order location OR the location is not list in the location list (in which any station owned telepad can have it)
+                //allow if either the telepad matches the order location OR the location is not list in the location list (in which any station owned telepad can have it)
+                if (!(oOrder.Grid == gridUid) && padGrids.Contains(oOrder.Grid))
+                    continue;
 
-                orderIndices.Add(oIndex);
+                index = oIndex;
+                order = oOrder;
+                orderDatabase = oDatabase;
+                break;
             }
 
-            if (orderIndices.Count == 0)
+            if (order is null || orderDatabase is null || index is null)
             {
                 comp.Accumulator += comp.Delay;
                 continue;
             }
 
-            orderIndices.Sort();
-            var index = orderIndices[0];
-            var order = orderDatabase.Orders[index];
             order.Amount--;
 
             if (order.Amount <= 0)
-                orderDatabase.Orders.Remove(index);
+                orderDatabase.Orders.Remove(index.Value);
 
             _audio.PlayPvs(_audio.GetSound(comp.TeleportSound), comp.Owner, AudioParams.Default.WithVolume(-8f));
             SpawnProduct(comp, order);

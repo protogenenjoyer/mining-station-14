@@ -18,6 +18,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Player;
 using Robust.Shared.Players;
 using Robust.Shared.Prototypes;
+using Content.Server.Station.Components;
 
 namespace Content.Server.Cargo.Systems
 {
@@ -108,9 +109,8 @@ namespace Content.Server.Cargo.Systems
                 return;
             }
 
-            //TODO add player to args
-            var orderDatabase = GetOrderDatabase(component);
-            var bankAccount = GetBankAccount(component);
+            var orderDatabase = GetOrderDatabase(component, player);
+            var bankAccount = GetBankAccount(component, player);
 
             // No station to deduct from.
             if (orderDatabase == null || bankAccount == null)
@@ -177,11 +177,10 @@ namespace Content.Server.Cargo.Systems
 
         private void OnRemoveOrderMessage(EntityUid uid, CargoOrderConsoleComponent component, CargoConsoleRemoveOrderMessage args)
         {
-            //if (args.Session.AttachedEntity is not { Valid: true } player)
-                //return;
+            if (args.Session.AttachedEntity is not { Valid: true } player)
+                return;
 
-            //TODO add player param
-            var orderDatabase = GetOrderDatabase(component);
+            var orderDatabase = GetOrderDatabase(component,player);
             if (orderDatabase == null) return;
             RemoveOrder(orderDatabase, args.OrderIndex);
         }
@@ -194,14 +193,19 @@ namespace Content.Server.Cargo.Systems
             if (args.Amount <= 0)
                 return;
 
-            //TODO add player param
-            var bank = GetBankAccount(component);
+            var bank = GetBankAccount(component, player);
             if (bank == null) return;
-            var orderDatabase = GetOrderDatabase(component);
+            var orderDatabase = GetOrderDatabase(component, player);
             if (orderDatabase == null) return;
 
-            //TODO include console location in order data (not owning station, actual grid)
-            var data = GetOrderData(args, GetNextIndex(orderDatabase));
+            //Include console location in order data (not owning station, actual grid)
+            if (Transform(uid).GridUid is not EntityUid gridUid)
+            {
+                PlayDenySound(uid, component);
+                return;
+            }
+
+            var data = GetOrderData(args, GetNextIndex(orderDatabase), gridUid);
 
             if (!TryAddOrder(orderDatabase, data))
             {
@@ -255,7 +259,7 @@ namespace Content.Server.Cargo.Systems
             return price;
         }
 
-        private CargoOrderData GetOrderData(CargoConsoleAddOrderMessage args, int index)
+        private CargoOrderData GetOrderData(CargoConsoleAddOrderMessage args, int index, EntityUid gridUid)
         {
             var product = _protoManager.Index<CargoProductPrototype>(args.ProductId);
             int price = AutoPrice(product.Product);
@@ -266,7 +270,7 @@ namespace Content.Server.Cargo.Systems
                 else
                     price = product.PointCost;
             }
-            return new CargoOrderData(index, args.ProductId, price, args.Amount, args.Requester, args.Reason);
+            return new CargoOrderData(index, args.ProductId, price, args.Amount, args.Requester, args.Reason, gridUid);
         }
 
         private int GetOrderCount(StationCargoOrderDatabaseComponent component)
@@ -342,19 +346,41 @@ namespace Content.Server.Cargo.Systems
 
         #region Station
 
-        private StationBankAccountComponent? GetBankAccount(CargoOrderConsoleComponent component)
+        private StationBankAccountComponent? GetBankAccount(CargoOrderConsoleComponent component, EntityUid player)
         {
-            //TODO if there is no station uid or bank account, get player assigned station
+            //If there is no station uid or bank account, get player assigned station
             var station = _station.GetOwningStation(component.Owner);
+
+            if (station is null)
+            {
+                //get assigned station component off player
+                if (TryComp<StationAssignmentComponent>(player, out var assignedStation) &&
+                    assignedStation.AssignedStationUid is not null)
+                {
+                    //get station uid via assigned station component and get station via station uid
+                    station = _station.GetOwningStation(assignedStation.AssignedStationUid.Value);
+                }
+            }
 
             TryComp<StationBankAccountComponent>(station, out var bankComponent);
             return bankComponent;
         }
 
-        private StationCargoOrderDatabaseComponent? GetOrderDatabase(CargoOrderConsoleComponent component)
+        private StationCargoOrderDatabaseComponent? GetOrderDatabase(CargoOrderConsoleComponent component, EntityUid player)
         {
-            //TODO if there is no station uid or order database, get player assigned station
+            //If there is no station uid or order database, get player assigned station
             var station = _station.GetOwningStation(component.Owner);
+
+            if (station is null)
+            {
+                //get assigned station component off player
+                if (TryComp<StationAssignmentComponent>(player, out var assignedStation) &&
+                    assignedStation.AssignedStationUid is not null)
+                {
+                    //get station uid via assigned station component and get station via station uid
+                    station = _station.GetOwningStation(assignedStation.AssignedStationUid.Value);
+                }
+            }
 
             TryComp<StationCargoOrderDatabaseComponent>(station, out var orderComponent);
             return orderComponent;

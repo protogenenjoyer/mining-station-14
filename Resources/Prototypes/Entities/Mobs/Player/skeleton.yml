@@ -23,6 +23,8 @@
     - type: Faction
       factions:
         - NanoTrasen
+    - type: MiningCredit
+    - type: StationAssignment 
 
 - type: entity
   name: Skeleton Pirate
