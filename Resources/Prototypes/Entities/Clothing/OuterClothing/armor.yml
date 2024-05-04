@@ -72,8 +72,10 @@
         Slash: 0.3
         Piercing: 0.3
         Heat: 0.5
-        Radiation: 0
+        Radiation: 0.5
         Caustic: 0.75
+  - type: ExplosionResistance
+    damageCoefficient: 0.5
   - type: ClothingSpeedModifier
     walkModifier: 0.65
     sprintModifier: 0.65
