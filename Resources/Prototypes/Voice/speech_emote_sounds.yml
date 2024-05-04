@@ -148,3 +148,19 @@
     path: /Audio/Animals/bear.ogg
     params:
       variation: 0.125
+
+- type: emoteSounds
+  id: Diona
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      path: /Audio/Voice/Diona/diona_scream.ogg
+
+- type: emoteSounds
+  id: Moth
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      path: /Audio/Voice/Moth/scream_moth.ogg

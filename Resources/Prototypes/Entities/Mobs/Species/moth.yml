@@ -63,6 +63,11 @@
     prototype: Moth
     species: moth
     requiredLegs: 2
+  - type: Vocal
+    sounds:
+      Male: Moth
+      Female: Moth
+      Unsexed: Moth
   - type: Temperature
     heatDamageThreshold: 319 # 46C
     coldDamageThreshold: 267 # -6C

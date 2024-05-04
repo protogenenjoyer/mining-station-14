@@ -97,6 +97,11 @@
   - type: MovementSpeedModifier
     baseWalkSpeed : 1.5
     baseSprintSpeed : 3.5
+  - type: Vocal
+    sounds:
+      Male: Diona
+      Female: Diona
+      Unsexed: Diona
   - type: Temperature
     heatDamageThreshold: 333
     coldDamageThreshold: 273
