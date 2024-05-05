@@ -919,7 +919,8 @@ namespace Content.Server.Surgery
 
         private async Task<bool> HardStitchPart(EntityUid user, SurgeryToolComponent tool, EntityUid target, BodyPartComponent bodyPart, HandsComponent userHands, bool timeOverride)
         {
-            bool endo;
+            bool endo = false;
+            bool exo = false;
 
             //first check for an endoskeleton
             if (bodyPart.EndoOpened)
@@ -928,8 +929,8 @@ namespace Content.Server.Surgery
             else if (bodyPart.Incised)
                 return await StitchPart(user, tool, target, bodyPart, userHands, true, timeOverride);
             //then for an exoskeleton
-            else if (bodyPart.ExoSkeleton)
-                endo = false;
+            else if (bodyPart.ExoSkeleton && bodyPart.ExoOpened)
+                exo = true;
             else if (!bodyPart.Working && bodyPart.ParentSlot is not null)
                 return await EnablePart(user, tool, target, bodyPart.ParentSlot, bodyPart, userHands, timeOverride);
             else
@@ -948,7 +949,7 @@ namespace Content.Server.Surgery
                 _bodySystem.SetBodyPartEndoOpen(bodyPart, false);
                 _popupSystem.PopupEntity(Loc.GetString("surgery-endoskeleton-closed"), user, user);
             }
-            else if (!endo)
+            else if (exo)
             {
                 if (!timeOverride)
                     if (!(await ProcedureDoAfter(user, target, tool.HardSutureTime * tool.HardSutureTimeMod, tool))) return false;
