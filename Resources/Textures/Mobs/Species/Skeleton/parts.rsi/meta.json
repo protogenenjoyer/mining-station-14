@@ -111,6 +111,10 @@
             "directions": 1
         },
         {
+            "name": "torso_exo_opened_icon",
+            "directions": 1
+        },
+        {
           "name": "l_arm_exo_opened_icon",
           "directions": 1
         },
